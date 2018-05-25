@@ -6,13 +6,14 @@ import java.util.Arrays;
 public class ArrayStorage {
     Resume[] storage = new Resume[10000];
     private int size;
+    private int index;
 
     void clear() {
         Arrays.fill(storage, null);
     }
 
     void save(Resume r) {
-        int index = getIndex(r.getUuid());
+         index = getIndex(r.getUuid());
 
         if (index >= 0) {
             System.out.println("Такое резюме уже существует");
@@ -37,7 +38,15 @@ public class ArrayStorage {
     }
 
     Resume get(String uuid) {
-        return null;
+
+         index = getIndex(uuid);
+
+        if (index < 0) {
+            System.out.println("Такого uuid не существует");
+            return null;
+        } else {
+            return storage[index];
+        }
     }
 
     void delete(String uuid) {
