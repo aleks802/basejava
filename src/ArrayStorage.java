@@ -10,22 +10,23 @@ public class ArrayStorage {
 
     void clear() {
         Arrays.fill(storage, null);
+        size = 0;
     }
 
     void save(Resume r) {
-         index = getIndex(r.getUuid());
+        index = checkForAvailabilityResume(r.getUuid());
 
         if (index >= 0) {
             System.out.println("Такое резюме уже существует");
         } else if (size == storage.length) {
-            System.out.println(" превышен лимит");
+            System.out.println("Превышен лимит");
         } else {
             storage[size] = r;
             size++;
         }
     }
 
-    private int getIndex(String uuid) {
+    private int checkForAvailabilityResume(String uuid) {
 
         for (int i = 0; i < size; i += 1) {
 
@@ -39,10 +40,10 @@ public class ArrayStorage {
 
     Resume get(String uuid) {
 
-         index = getIndex(uuid);
+        index = checkForAvailabilityResume(uuid);
 
         if (index < 0) {
-            System.out.println("Такого uuid не существует");
+            System.out.println("Резюме " + uuid + " не существует");
             return null;
         } else {
             return storage[index];
@@ -50,13 +51,24 @@ public class ArrayStorage {
     }
 
     void delete(String uuid) {
+
+        index = checkForAvailabilityResume(uuid);
+
+        if (index < 0) {
+            System.out.println("Резюме " + uuid + " не существует");
+        } else {
+            storage[index] = null;
+            storage[index] = storage[size - 1];
+            storage[size - 1] = null;
+            size--;
+        }
     }
 
     /**
      * @return array, contains only Resumes in storage (without null)
      */
     Resume[] getAll() {
-        return new Resume[0];
+        return Arrays.copyOf(storage, size);
     }
 
     int size() {
