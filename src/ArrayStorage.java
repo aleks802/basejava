@@ -6,17 +6,15 @@ import java.util.Arrays;
 public class ArrayStorage {
     Resume[] storage = new Resume[10000];
     private int size;
-    private int index;
 
     void clear() {
-        Arrays.fill(storage, null);
+        Arrays.fill(storage, 0, size, null);
         size = 0;
     }
 
     void save(Resume resume) {
-
-        if (checkForAvailabilityResume(resume.getUuid())) {
-            System.out.println("Такое резюме уже существует");
+        if (checkForAvailabilityResume(resume.getUuid()) > 0) {
+            System.out.printf("Резюме с = %s уже существует%n", resume.getUuid());
         } else if (size == storage.length) {
             System.out.println("Превышен лимит");
         } else {
@@ -25,37 +23,32 @@ public class ArrayStorage {
         }
     }
 
-    private boolean checkForAvailabilityResume(String uuid) {
-
-        for (int i = 0; i < size; i += 1) {
-
+    private int checkForAvailabilityResume(String uuid) {
+        for (int i = 0; i < size; i++) {
             if (uuid.equals(storage[i].getUuid())) {
-                index = i;
-                return true;
+                return i;
             }
         }
-        return false;
+        return -1;
     }
 
     Resume get(String uuid) {
-
-        if (!checkForAvailabilityResume(uuid)) {
-            System.out.println("Резюме " + uuid + " не существует");
+        int index = checkForAvailabilityResume(uuid);
+        if (index < 0) {
+            System.out.printf("Резюме с = %s не существует%n", uuid);
             return null;
-        } else {
-            return storage[index];
         }
+        return storage[index];
     }
 
     void delete(String uuid) {
-
-        if (!checkForAvailabilityResume(uuid)) {
-            System.out.println("Резюме " + uuid + " не существует");
+        int index = checkForAvailabilityResume(uuid);
+        if (index < 0) {
+            System.out.printf("Резюме с = %s не существует%n", uuid);
         } else {
-            storage[index] = null;
-            storage[index] = storage[size - 1];
-            storage[size - 1] = null;
             size--;
+            storage[index] = storage[size];
+            storage[size] = null;
         }
     }
 
