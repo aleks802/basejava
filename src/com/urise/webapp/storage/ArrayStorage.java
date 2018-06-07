@@ -18,10 +18,10 @@ public class ArrayStorage {
     }
 
     public void save(Resume resume) {
-        if (checkForAvailabilityResume(resume.getUuid()) >= 0) {
-            System.out.printf("Резюме с uuid = %s уже существует%n", resume.getUuid());
+        if (getIndex(resume.getUuid()) >= 0) {
+            System.out.printf("Resume with uuid = %s already exists%n", resume.getUuid());
         } else if (size == storage.length) {
-            System.out.println("Хранилище заполнено");
+            System.out.println("Storage is full");
         } else {
             storage[size] = resume;
             size++;
@@ -29,36 +29,28 @@ public class ArrayStorage {
     }
 
     public void update(Resume resume) {
-        int index = checkForAvailabilityResume(resume.getUuid());
+        int index = getIndex(resume.getUuid());
         if (index >= 0) {
             System.out.printf("Введите новое имя для резюме с uuid = %s%n", resume.getUuid());
             storage[index].setUuid(MyUtilScanner.getString());
         }
-        System.out.printf("Резюме с uuid = %s не существует%n", resume.getUuid());
+        System.out.printf("Resume with uuid = %s doesn't exist%n", resume.getUuid());
     }
 
-    private int checkForAvailabilityResume(String uuid) {
-        for (int i = 0; i < size; i += 1) {
-            if (uuid.equals(storage[i].getUuid())) {
-                return i;
-            }
-        }
-        return -1;
-    }
 
     public Resume get(String uuid) {
-        int index = checkForAvailabilityResume(uuid);
+        int index = getIndex(uuid);
         if (index < 0) {
-            System.out.printf("Резюме с uuid = %s не существует%n", uuid);
+            System.out.printf("Resume with uuid = %s doesn't exist%n", uuid);
             return null;
         }
         return storage[index];
     }
 
     public void delete(String uuid) {
-        int index = checkForAvailabilityResume(uuid);
+        int index = getIndex(uuid);
         if (index < 0) {
-            System.out.printf("Резюме с uuid = %s не существует%n", uuid);
+            System.out.printf("Resume with uuid = %s doesn't exist%n", uuid);
         } else {
             size--;
             storage[index] = storage[size];
@@ -76,5 +68,14 @@ public class ArrayStorage {
 
     public int size() {
         return size;
+    }
+
+    private int getIndex(String uuid) {
+        for (int i = 0; i < size; i += 1) {
+            if (uuid.equals(storage[i].getUuid())) {
+                return i;
+            }
+        }
+        return -1;
     }
 }
