@@ -48,10 +48,10 @@ public abstract class AbstractArrayStorage implements Storage {
 
     public void update(Resume resume) {
         int index = getIndex(resume.getUuid());
-        System.out.println(index);
         if (index >= 0) {
             System.out.printf("Введите новое имя для резюме с uuid = %s%n", resume.getUuid());
-            storage[index] = new Resume(MyUtilScanner.getString());
+//            storage[index] = new Resume(MyUtilScanner.getString());
+            storage[index] = resume;
         } else {
             throw new NotExistStorageException(resume.getUuid());
         }

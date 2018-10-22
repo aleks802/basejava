@@ -5,6 +5,8 @@ import com.urise.webapp.model.Resume;
 /**
  * Array based storage for Resumes
  */
+//@RunWith(Suite.class)
+//Suite.SuiteClasses(ArrayStorageTest)
 public class ArrayStorage extends AbstractArrayStorage {
 
     @Override
