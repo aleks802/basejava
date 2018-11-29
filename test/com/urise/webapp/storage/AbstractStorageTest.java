@@ -6,7 +6,6 @@ import com.urise.webapp.model.Resume;
 import org.junit.Before;
 import org.junit.Test;
 
-import java.lang.reflect.Array;
 import java.util.Arrays;
 import java.util.List;
 
@@ -85,7 +84,7 @@ public abstract class AbstractStorageTest {
 
     @Test
     public void update() throws Exception {
-        Resume newResume = new Resume(UUID_1);
+        Resume newResume = new Resume(UUID_1, "New Name");
         storage.update(newResume);
         assertTrue(newResume == storage.get(UUID_1));
     }
@@ -108,12 +107,10 @@ public abstract class AbstractStorageTest {
     }
 
     @Test
-    public void getAll() throws Exception {
-        Resume[] array = storage.getAll();
-        assertSize(3);
-        assertEquals(RESUME_1, array[0]);
-        assertEquals(RESUME_2, array[1]);
-        assertEquals(RESUME_3, array[2]);
+    public void getAllSorted() throws Exception {
+        List<Resume> list = storage.getAllSorted();
+        assertEquals(3, list.size());
+        assertEquals(list, Arrays.asList(RESUME_1, RESUME_2, RESUME_3));
     }
 
     private void assertGet(Resume resume) {
