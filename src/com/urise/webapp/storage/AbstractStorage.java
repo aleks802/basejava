@@ -6,8 +6,11 @@ import com.urise.webapp.model.Resume;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.logging.Logger;
 
 public abstract class AbstractStorage<SK> implements Storage {
+
+    private static final Logger LOG = Logger.getLogger(AbstractStorage.class.getName());
 
     protected abstract void doSave(Resume resume, SK searchKey);
 
@@ -25,21 +28,25 @@ public abstract class AbstractStorage<SK> implements Storage {
 
 
     public void save(Resume resume) {
+        LOG.info("Save " + resume);
         SK searchKey = getNotExistedSearchKey(resume.getUuid());
         doSave(resume, searchKey);
     }
 
     public void update(Resume resume) {
+        LOG.info("Update " + resume);
         SK searchKey = getExistedSearchKey(resume.getUuid());
         doUpdate(resume, searchKey);
     }
 
     public void delete(String uuid) {
+        LOG.info("Delete " + uuid);
         SK searchKey = getExistedSearchKey(uuid);
             doDelete(searchKey);
     }
 
     public Resume get(String uuid) {
+        LOG.info("Get " + uuid);
         SK searchKey = getExistedSearchKey(uuid);
         return doGet(searchKey);
     }
@@ -47,6 +54,7 @@ public abstract class AbstractStorage<SK> implements Storage {
     private SK getExistedSearchKey(String uuid) {
         SK searchKey = getSearchKey(uuid);
         if (!isExist(searchKey)) {
+            LOG.warning("Resume with uuid = %s doesn't exist%n");
             throw new NotExistStorageException(uuid);
         }
         return searchKey;
@@ -55,6 +63,7 @@ public abstract class AbstractStorage<SK> implements Storage {
     private SK getNotExistedSearchKey(String uuid) {
         SK searchKey = getSearchKey(uuid);
         if (isExist(searchKey)) {
+            LOG.warning("Resume with uuid = %s already exists%n");
             throw new ExistStorageException(uuid);
         }
         return searchKey;
@@ -62,6 +71,7 @@ public abstract class AbstractStorage<SK> implements Storage {
 
     @Override
     public List<Resume> getAllSorted() {
+        LOG.info("getAllSorted");
         List<Resume> list = doCopyAll();
         Collections.sort(list);
         return list;
